@@ -32,7 +32,7 @@ While the program is running, you should see scan info printed in the console ou
 python main.py >& output.log
 ```
 
-An excel file acq_asset_report.xlsx will be created in current workspace, which collects all the documents matching the target name, and the document mentioned the earliest acquisition is highlighted in red in column-A, and the first acquisition paragraph is filled in column-B.  
+After the program completes, an simple excel file acq_asset_report.xlsx is created in current workspace, which collects all the documents matching the target name, and the document mentioned the earliest acquisition is highlighted in red in column-A, and the first acquisition paragraph is filled in column-B.  
 
 BTW, for easing the console output, the HTML table if extracted,  is converted into CVS format which uses comma as delimiter.  The MS Excel program support CVS file format, so you can review the table in MS Excel as following:
 
