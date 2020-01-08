@@ -35,7 +35,7 @@ def read_specs(filename, startrow=1, endrow=99999999):
     rows = read_excel(filename)
     for key,value in rows.items():
         # skip the header
-        if key <= 0 or key < startrow or key > endrow:
+        if key <= 0 or key < startrow or key >= endrow:
             continue
         date_a = str(value[0])
         date_e = str(value[2])
