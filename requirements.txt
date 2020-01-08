@@ -10,7 +10,6 @@ comtypes==1.1.4
 cycler==0.10.0
 docopt==0.6.2
 docutils==0.15.2
--e git+https://github.com/joeyism/py-edgar.git@31baa8cf042c40eb9a30afc5ae459334d9a6b539#egg=edgar
 entrypoints==0.3
 flake8==3.7.9
 fortran-language-server==1.10.3
@@ -47,5 +46,6 @@ six==1.11.0
 tushare==1.1.0
 urllib3==1.22
 wrapt==1.10.11
+xlrd==1.2.0
 XlsxWriter==1.2.7
 yarg==0.1.9

@@ -33,30 +33,22 @@ class TestMainFlow(unittest.TestCase):
             'underline':  1,
             'font_size':  12,
             })
-        # read the cik/targetname between row11~20 from the firms spreadsheet 
-        # the default specs are overwitten!
-        TestMainFlow.specs = utils.read_specs("./firms.xlsx", 1, 100)
+
         for spec in TestMainFlow.specs:
             cik = spec[0]
             target_name = spec[1]
             golden_doc = spec[2]
             index_file = os.path.join(raw_dir, cik, "download.idx")
-            clean_name = ''.join(e for e in target_name if e.isalnum())
-            # A company could acquire lots of small company during a period
-            worksheet = workbook.add_worksheet(f"{cik}-{clean_name}")
+            worksheet = workbook.add_worksheet(cik)
             worksheet.write_string('A1', "Target Name:")
             worksheet.write_string('B1', target_name)
             worksheet.set_column('A:A', 35)
             worksheet.set_column('B:B', 150)
             utils.logger.info(f'scanning acquisition asset information about {target_name} in {cik} docs...')
             if os.path.exists(index_file) is False:
-                try:
-                    company = Company(cik)
-                    utils.logger.info(f"\tdownloading {'/'.join(filling_types)} documents for cik:{cik}...") 
-                    index_file = company.download_documents(since_date, to_date, filling_types, raw_dir)
-                except Exception as e:
-                    utils.logger.error(f"Failed to download documents for cik:{cik}...\n{utils.traceback.format_exc()}")
-                    continue
+                company = Company(cik)
+                utils.logger.info(f"\tdownloading {'/'.join(filling_types)} documents for cik:{cik}...") 
+                index_file = company.download_documents(since_date, to_date, filling_types, raw_dir)
             # grep the target name in case-sensitive way. or set flags = re.IGNORECASE for a case-insensitive search
             ana = Analysis(target_name, index_file)
             docs = ana.locate_target_documents(flags)
@@ -70,12 +62,7 @@ class TestMainFlow(unittest.TestCase):
                     continue
 
                 utils.logger.info(f'\tfound {target_name} in {filename}, analyzing...')
-                try:
-                    info = ana.extract_assets(filename, flags)
-                except Exception as e:
-                    utils.logger.error(f"Failed in analyzing document:{filename}...\n{utils.traceback.format_exc()}")
-                    continue
-
+                info = ana.extract_assets(filename, flags)
                 if  info is None:
                     worksheet.write_url(f"A{row}", dict['FILLING_URL'], string=filename)
                     continue
@@ -89,8 +76,8 @@ class TestMainFlow(unittest.TestCase):
                     utils.logger.info(f"{info}\n")
                     continue
             #self.assertEqual(golden_doc, doc_found)
-            #if golden_doc != doc_found:
-                #utils.logger.error(f"Expecting initial report: {golden_doc} for {cik} {target_name}, but it locates: {doc_found}")
+            if golden_doc != doc_found:
+                utils.logger.error(f"Expecting initial report: {golden_doc} for {cik} {target_name}, but it locates: {doc_found}")
         workbook.close()
 
 if __name__ == '__main__':

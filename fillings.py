@@ -22,7 +22,7 @@ class Company():
         self.base_url = f"https://www.sec.gov"
 
     def _get_company_info(self):
-        page = requests.get(self.url)
+        page = requests.get(self.url, verify=False, timeout=20)
         soap = BeautifulSoup(page.content, "html.parser")
         tag = soap.find('span',class_='companyName')
         if tag is None:
@@ -57,7 +57,7 @@ class Company():
 
     def get_all_filings_page(self, filing_type="", prior_to="", ownership="include", no_of_entries=MAX_ITEMS):
       url = self._get_filings_url(filing_type, prior_to, ownership, no_of_entries)
-      page = requests.get(url)
+      page = requests.get(url, verify=False, timeout=20)
       return page
     
     def get_search_results(self, filing_type="", prior_to="", ownership="include", no_of_entries=MAX_ITEMS):
@@ -121,7 +121,7 @@ class Company():
         """
         parse out the url of the document format file from the 'Filling Detail' page
         """
-        page = requests.get(detail_url)
+        page = requests.get(detail_url, verify=False, timeout=20)
         soap = BeautifulSoup(page.content, "html.parser")
         table = soap.find('table', summary='Document Format Files')
         urls = []
@@ -148,7 +148,7 @@ class Company():
         if len(prefix) is not 0:
             filename = prefix.strip() + "_" + os.path.basename(url)
         filename = os.path.join(dir, filename)
-        page = requests.get(url)
+        page = requests.get(url, verify=False, timeout=20)
         with open(filename, "wb") as input:
             input.write(page.content)
         return filename
